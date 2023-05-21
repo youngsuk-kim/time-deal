@@ -56,4 +56,8 @@ public class Product {
   public String getName() {
     return this.name;
   }
+
+  public Long getId() {
+    return this.id;
+  }
 }
