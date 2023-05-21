@@ -15,7 +15,8 @@ public record ProductCreateRequest(
     LocalDateTime time,
     String name
 ) {
-    public Product toEntity(ProductCreateRequest request) {
-        return new Product(new Stock(request.stock), new TimeSale(time), name);
-    }
+
+  public Product toEntity(ProductCreateRequest request) {
+    return new Product(new Stock(request.stock), new TimeSale(time), name);
+  }
 }

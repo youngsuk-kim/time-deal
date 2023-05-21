@@ -24,7 +24,7 @@ public final class Stock {
         return this;
     }
 
-    public Stock minus(Stock stock, LocalDateTime overTime) {
+    public Stock minus(Stock stock) {
         int count = validate(stock);
 
         synchronized (this) {

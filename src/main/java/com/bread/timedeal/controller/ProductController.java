@@ -8,29 +8,31 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ProductController {
 
-    private final ProductService productService;
+  private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+  public ProductController(ProductService productService) {
+    this.productService = productService;
+  }
 
-    /**
-     * 상품 생성
-     * @param request
-     * @return
-     */
-    @PostMapping("/products")
-    public ProductCreateResponse create(@RequestBody ProductCreateRequest request) {
-        return ProductCreateResponse.of(productService.create(request));
-    }
+  /**
+   * 상품 생성
+   *
+   * @param request
+   * @return
+   */
+  @PostMapping("/products")
+  public ProductCreateResponse create(@RequestBody ProductCreateRequest request) {
+    return ProductCreateResponse.of(productService.create(request));
+  }
 
-    /**
-     * 상품 재고 증가
-     * @param productId
-     * @param stock // 증가 시킬 재고량
-     */
-    @PostMapping("/products/{productId}/stock")
-    public void increaseStock(@PathVariable Long productId, @RequestParam Integer stock) {
-        productService.increaseStock(productId, stock);
-    }
+  /**
+   * 상품 재고 증가
+   *
+   * @param productId
+   * @param stock     증가 시킬 재고량
+   */
+  @PostMapping("/products/{productId}/stock")
+  public void increaseStock(@PathVariable Long productId, @RequestParam Integer stock) {
+    productService.increaseStock(productId, stock);
+  }
 }

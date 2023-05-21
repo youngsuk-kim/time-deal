@@ -8,51 +8,52 @@ import java.time.LocalDateTime;
 @Table(name = "products")
 public class Product {
 
-    public Product(Stock stock, TimeSale timeSale, String name) {
-        this.stock = stock;
-        this.timeSale = timeSale;
-        this.name = name;
+  public Product(Stock stock, TimeSale timeSale, String name) {
+    this.stock = stock;
+    this.timeSale = timeSale;
+    this.name = name;
+  }
+
+  public Product() {
+  }
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column
+  private String name;
+
+  @Embedded
+  private Stock stock = new Stock(1);
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  private TimeSale timeSale;
+
+  public Product add(Stock stock) {
+    this.stock.plus(stock);
+    return this;
+  }
+
+  public int count() {
+    return this.stock.count();
+  }
+
+  public Product decrease(Stock stock, LocalDateTime now) {
+    if (this.timeSale.timeOver(now)) {
+      throw new RuntimeException("할인 기간이 종료 된 상품 입니다.");
     }
 
-    public Product() {}
+    this.stock.minus(stock);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    return this;
+  }
 
-    @Column
-    private String name;
+  public LocalDateTime endTime() {
+    return timeSale.getSaleEndTime();
+  }
 
-    @Embedded
-    private Stock stock = new Stock(1);
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private TimeSale timeSale;
-
-    public Product add(Stock stock) {
-        this.stock.plus(stock);
-        return this;
-    }
-
-    public int count() {
-        return this.stock.count();
-    }
-
-    public Product decrease(Stock stock, LocalDateTime now) {
-        if (timeSale.timeOver(now)) {
-            throw new RuntimeException("할인 기간이 종료 된 상품 입니다.");
-        }
-
-        this.stock.minus(stock, now);
-
-        return this;
-    }
-
-    public LocalDateTime endTime() {
-        return timeSale.getSaleEndTime();
-    }
-
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 }
