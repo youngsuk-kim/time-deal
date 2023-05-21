@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
-public class UserTest {
+class UserTest {
 
   private final Role adminRole = Role.ADMIN;
   private final Role nonAdminRole = Role.USER;
@@ -15,7 +15,7 @@ public class UserTest {
   private User testCustomer;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     testStock = new Stock(10);
     testAdmin = new User(adminRole);
     testCustomer = new User(nonAdminRole);

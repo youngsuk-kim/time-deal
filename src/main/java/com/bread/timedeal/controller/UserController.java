@@ -15,6 +15,12 @@ public class UserController {
     this.userService = userService;
   }
 
+  /**
+   * 유저 상품 구매
+   * @param productId
+   * @param quantity
+   * @param userId
+   */
   @PostMapping("/users/buy/{productId}")
   public void buy(@PathVariable Long productId, @RequestParam int quantity,
       @RequestParam Long userId) {

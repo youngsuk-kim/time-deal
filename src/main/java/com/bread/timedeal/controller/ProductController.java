@@ -29,7 +29,7 @@ public class ProductController {
    * 상품 재고 증가
    *
    * @param productId
-   * @param stock     증가 시킬 재고량
+   * @param stock
    */
   @PostMapping("/products/{productId}/stock")
   public void increaseStock(@PathVariable Long productId, @RequestParam Integer stock) {
