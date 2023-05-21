@@ -14,6 +14,9 @@ import com.bread.timedeal.domain.TimeSale;
 import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.repository.ProductRepository;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,6 +59,31 @@ class ProductServiceTest {
     productService.increaseStock(productId, stockToAdd);
 
     assertThat(product.count()).isEqualTo(currentStock + stockToAdd);
+  }
+
+  @Test
+  void 재고_증가_동시성() throws InterruptedException {
+    Long productId = 1L;
+    int currentStock = 1;
+    int stockToAdd = 1;
+
+    Product product = new Product(new Stock(currentStock), new TimeSale(NOW), TEST_PRODUCT_NAME);
+    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+    ExecutorService executorService = Executors.newFixedThreadPool(3);
+    CountDownLatch latch = new CountDownLatch(1000);
+
+    for (int i = 0; i < 1000; i++) {
+      executorService.submit(() -> {
+        productService.increaseStock(productId, stockToAdd);
+        latch.countDown();
+      });
+    }
+
+    executorService.shutdown();
+    latch.await();
+
+    assertThat(product.count()).isEqualTo(currentStock + 1000);
   }
 
   @Test
