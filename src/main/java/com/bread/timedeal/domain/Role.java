@@ -4,6 +4,6 @@ public enum Role {
     ADMIN, USER;
 
     boolean notAdmin() {
-        return this == ADMIN;
+        return this == USER;
     }
 }

@@ -2,7 +2,7 @@ package com.bread.timedeal.domain;
 
 public class User {
 
-    private Role role;
+    private final Role role;
 
     public User(Role role) {
         this.role = role;

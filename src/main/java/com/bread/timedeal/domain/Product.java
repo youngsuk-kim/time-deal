@@ -2,14 +2,14 @@ package com.bread.timedeal.domain;
 
 public class Product {
 
-    private Quantity quantity = new Quantity();
+    private final Quantity quantity = new Quantity(0);
 
     public Product add(Quantity quantity) {
-        this.quantity.plus(quantity.count());
+        this.quantity.plus(quantity);
         return this;
     }
 
-    public Long quantity() {
+    public int count() {
         return this.quantity.count();
     }
 }

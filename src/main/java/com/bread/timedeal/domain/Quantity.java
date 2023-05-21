@@ -1,20 +1,25 @@
 package com.bread.timedeal.domain;
 
 public final class Quantity {
+    private int value;
 
-    private Long value = 0L;
+    public Quantity(int value) {
+        this.value = value;
+    }
 
-    public Quantity() {}
+    public Quantity plus(Quantity quantity) {
+        int count = quantity.count();
 
-    public Quantity plus(Long value) {
-        if (value <= 0) {
+        if (count <= 0) {
             throw new IllegalArgumentException();
         }
-        this.value += value;
+
+        this.value = this.value + count;
+
         return this;
     }
 
-    public Long count() {
-        return value;
+    public int count() {
+        return this.value;
     }
 }
