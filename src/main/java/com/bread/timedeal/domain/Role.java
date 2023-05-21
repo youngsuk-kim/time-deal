@@ -3,7 +3,9 @@ package com.bread.timedeal.domain;
 public enum Role {
     ADMIN, USER;
 
-    boolean notAdmin() {
-        return this == USER;
+    void checkRoleUser() {
+        if (this == USER) {
+            throw new IllegalArgumentException();
+        }
     }
 }

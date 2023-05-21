@@ -9,13 +9,13 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ProductTest {
+class ProductTest {
 
     @Test
     void 사용자_상품을_등록() {
         User user = new User(Role.ADMIN);
         Product product = new Product();
-        user.register(product, new Quantity(1));
+        user.register(product, new Stock(1));
 
         assertThat(product.count()).isEqualTo(1);
     }
@@ -26,11 +26,11 @@ public class ProductTest {
         Product product = new Product();
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
-        CountDownLatch latch = new CountDownLatch(10);
+        CountDownLatch latch = new CountDownLatch(1000);
 
         for (int i = 0; i < 1000; i++) {
             executorService.submit(() -> {
-                user.register(product, new Quantity(1));
+                user.register(product, new Stock(1));
                 latch.countDown();
             });
         }
@@ -47,7 +47,7 @@ public class ProductTest {
         Product product = new Product();
 
         assertThatThrownBy(() -> {
-            user.register(product, new Quantity(1));
+            user.register(product, new Stock(1));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -58,7 +58,7 @@ public class ProductTest {
 
 
         assertThatThrownBy(() -> {
-            user.register(product, new Quantity(1));
+            user.register(product, new Stock(1));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 }
