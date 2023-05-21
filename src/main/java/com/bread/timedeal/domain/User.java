@@ -1,17 +1,27 @@
 package com.bread.timedeal.domain;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "users")
 public class User {
 
-    private final Role role;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public User(Role role) {
-        this.role = role;
+    @Enumerated(EnumType.STRING)
+    private Role userRole;
+
+    public User(Role userRole) {
+        this.userRole = userRole;
     }
 
+    public User() {}
+
     public Product register(Product product, Stock stock) {
-        this.role.checkRoleUser();
+        this.userRole.checkRoleUser();
 
         return product.add(stock);
     }

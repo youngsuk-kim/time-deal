@@ -1,12 +1,33 @@
 package com.bread.timedeal.domain;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "products")
 public class Product {
 
-    private final Stock stock = new Stock(0);
+    public Product(Stock stock, TimeSale timeSale, String name) {
+        this.stock = stock;
+        this.timeSale = timeSale;
+        this.name = name;
+    }
 
-    private final TimeSale timeSale = new TimeSale(LocalDateTime.of(2023, 5, 24, 7, 7));
+    public Product() {}
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String name;
+
+    @Embedded
+    private Stock stock = new Stock(1);
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private TimeSale timeSale;
 
     public Product add(Stock stock) {
         this.stock.plus(stock);
@@ -25,5 +46,13 @@ public class Product {
         this.stock.minus(stock, now);
 
         return this;
+    }
+
+    public LocalDateTime endTime() {
+        return timeSale.getSaleEndTime();
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

@@ -1,19 +1,24 @@
 package com.bread.timedeal.domain;
 
+import jakarta.persistence.Embeddable;
+
 import java.time.LocalDateTime;
 
+@Embeddable
 public final class Stock {
-    private int value;
+    private int stock;
 
     public Stock(int value) {
-        this.value = value;
+        this.stock = value;
     }
+
+    public Stock() {}
 
     public Stock plus(Stock stock) {
         int count = validate(stock);
 
         synchronized (this) {
-            this.value = this.value + count;
+            this.stock = this.stock + count;
         }
 
         return this;
@@ -23,7 +28,7 @@ public final class Stock {
         int count = validate(stock);
 
         synchronized (this) {
-            this.value = this.value - count;
+            this.stock = this.stock - count;
         }
 
         return this;
@@ -39,6 +44,6 @@ public final class Stock {
     }
 
     public int count() {
-        return this.value;
+        return this.stock;
     }
 }

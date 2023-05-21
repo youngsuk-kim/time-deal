@@ -18,7 +18,7 @@ class ProductTest {
         user.register(product, new Stock(1));
 
         assertThat(product.count()).isEqualTo(1);
-    }
+    } 
 
     @Test
     void 사용자_동시에_100개_등록() throws InterruptedException {
