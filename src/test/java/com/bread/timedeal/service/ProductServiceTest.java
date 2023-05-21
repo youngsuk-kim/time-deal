@@ -1,6 +1,7 @@
 package com.bread.timedeal.service;
 
 import static com.bread.timedeal.Constants.NOW;
+import static com.bread.timedeal.Constants.TEST_PRODUCT_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,15 +31,15 @@ class ProductServiceTest {
   @Test
   void 상품_생성() {
     ProductCreateRequest productCreateRequest = new ProductCreateRequest(10,
-        NOW, "Test Product Name");
+        NOW, TEST_PRODUCT_NAME);
 
-    Product product = new Product(new Stock(10), new TimeSale(NOW), "Test Product Name");
+    Product product = new Product(new Stock(10), new TimeSale(NOW), TEST_PRODUCT_NAME);
 
     when(productRepository.save(any(Product.class))).thenReturn(product);
     Product createdProduct = productService.create(productCreateRequest);
 
     assertAll("상품 생성",
-        () -> assertThat(createdProduct.getName()).isEqualTo("Test Product Name"),
+        () -> assertThat(createdProduct.getName()).isEqualTo(TEST_PRODUCT_NAME),
         () -> assertThat(createdProduct.endTime()).isEqualTo(NOW)
     );
   }
@@ -49,7 +50,7 @@ class ProductServiceTest {
     int currentStock = 10;
     int stockToAdd = 5;
 
-    Product product = new Product(new Stock(10), new TimeSale(NOW), "Test Product Name");
+    Product product = new Product(new Stock(10), new TimeSale(NOW), TEST_PRODUCT_NAME);
     when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
     productService.increaseStock(productId, stockToAdd);

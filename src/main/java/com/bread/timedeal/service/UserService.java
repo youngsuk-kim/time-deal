@@ -1,6 +1,7 @@
 package com.bread.timedeal.service;
 
 import com.bread.timedeal.domain.Product;
+import com.bread.timedeal.domain.Role;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.User;
 import com.bread.timedeal.repository.ProductRepository;
@@ -18,6 +19,11 @@ public class UserService {
   public UserService(UserRepository userRepository, ProductRepository productRepository) {
     this.userRepository = userRepository;
     this.productRepository = productRepository;
+  }
+
+  @Transactional
+  public void create(Role role) {
+    userRepository.save(new User(role));
   }
 
   @Transactional

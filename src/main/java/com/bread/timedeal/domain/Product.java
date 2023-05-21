@@ -40,7 +40,7 @@ public class Product {
   }
 
   public Product decrease(Stock stock, LocalDateTime now) {
-    if (this.timeSale.timeOver(now)) {
+    if (!this.timeSale.timeOver(now)) {
       throw new RuntimeException("할인 기간이 종료 된 상품 입니다.");
     }
 

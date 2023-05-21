@@ -1,5 +1,8 @@
 package com.bread.timedeal.domain;
 
+import static com.bread.timedeal.Constants.NOW;
+import static com.bread.timedeal.Constants.TEST_PRODUCT_NAME;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +22,8 @@ class UserTest {
     testStock = new Stock(10);
     testAdmin = new User(adminRole);
     testCustomer = new User(nonAdminRole);
-    testProduct = new Product(testStock, new TimeSale(LocalDateTime.of(2023, 5, 24, 7, 7)),
-        "testProductName");
+    testProduct = new Product(testStock, new TimeSale(NOW),
+        TEST_PRODUCT_NAME);
   }
 
   @Test
@@ -48,7 +51,7 @@ class UserTest {
     User user = new User(Role.ADMIN) {
       @Override
       protected LocalDateTime now() {
-        return LocalDateTime.of(2023, 5, 24, 7, 6);
+        return NOW;
       }
     };
 
