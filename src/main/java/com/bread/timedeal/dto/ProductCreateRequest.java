@@ -3,14 +3,15 @@ package com.bread.timedeal.dto;
 import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.TimeSale;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+import static com.bread.timedeal.Constants.DATE_TIME_FORMAT;
+
 public record ProductCreateRequest(
     int stock,
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = DATE_TIME_FORMAT)
     LocalDateTime time,
     String name
 ) {

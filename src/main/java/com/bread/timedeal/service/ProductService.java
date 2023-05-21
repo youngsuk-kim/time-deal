@@ -1,6 +1,7 @@
 package com.bread.timedeal.service;
 
 import com.bread.timedeal.domain.Product;
+import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,12 @@ public class ProductService {
     @Transactional
     public Product create(ProductCreateRequest request) {
         return productRepository.save(request.toEntity(request));
+    }
+
+    @Transactional
+    public void increaseStock(Long productId, int stock) {
+        Product foundProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품이 없습니다"));
+        foundProduct.add(new Stock(stock));
     }
 }
