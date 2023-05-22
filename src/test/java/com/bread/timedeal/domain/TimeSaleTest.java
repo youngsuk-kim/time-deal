@@ -1,7 +1,8 @@
 package com.bread.timedeal.domain;
 
 
-import static com.bread.timedeal.Constants.NOW;
+import static com.bread.timedeal.constants.Constants.NOW;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,6 @@ class TimeSaleTest {
 
     TimeSale timeSale = new TimeSale(saleEndTime);
 
-    Assertions.assertTrue(timeSale.timeOver(now));
+    assertTrue(timeSale.timeOver(now));
   }
 }

@@ -4,6 +4,7 @@ import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.repository.ProductRepository;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,4 +28,11 @@ public class ProductService {
         .orElseThrow(() -> new RuntimeException("상품이 없습니다"));
     foundProduct.add(new Stock(stock));
   }
+
+  @Transactional
+  public void decreaseStock(Long productId, int stock) {
+    Product foundProduct = productRepository.findByIdPessimisticLock(productId);
+    foundProduct.decrease(new Stock(stock), LocalDateTime.now());
+  }
+
 }

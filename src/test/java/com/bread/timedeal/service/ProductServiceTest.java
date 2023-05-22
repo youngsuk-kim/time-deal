@@ -1,13 +1,14 @@
 package com.bread.timedeal.service;
 
-import static com.bread.timedeal.Constants.NOW;
-import static com.bread.timedeal.Constants.TEST_PRODUCT_NAME;
+import static com.bread.timedeal.constants.Constants.NOW;
+import static com.bread.timedeal.constants.Constants.TEST_PRODUCT_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.bread.timedeal.constants.Constants;
 import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.TimeSale;
@@ -18,12 +19,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ProductServiceTest {
 
   @Mock

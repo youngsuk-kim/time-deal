@@ -1,8 +1,11 @@
 package com.bread.timedeal.domain;
 
-import static com.bread.timedeal.Constants.NOW;
-import static com.bread.timedeal.Constants.TEST_PRODUCT_NAME;
+import static com.bread.timedeal.constants.Constants.NOW;
+import static com.bread.timedeal.constants.Constants.TEST_PRODUCT_NAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.bread.timedeal.constants.Constants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +32,8 @@ class UserTest {
   @Test
   void 재고_증가() {
     Product result = testAdmin.register(testProduct, testStock);
-    Assertions.assertEquals(testProduct, result);
-    Assertions.assertEquals(20, result.count());
+    assertEquals(testProduct, result);
+    assertEquals(20, result.count());
   }
 
   @Test
@@ -43,7 +46,7 @@ class UserTest {
   void 구매() {
     testProduct.add(testStock);
     testAdmin.buy(testProduct, new Stock(5));
-    Assertions.assertEquals(15, testProduct.count());
+    assertEquals(15, testProduct.count());
   }
 
   @Test
@@ -56,6 +59,6 @@ class UserTest {
     };
 
     LocalDateTime result = testAdmin.now();
-    Assertions.assertTrue(result.isBefore(user.now()) || result.isEqual(user.now()));
+    assertTrue(result.isBefore(user.now()) || result.isEqual(user.now()));
   }
 }

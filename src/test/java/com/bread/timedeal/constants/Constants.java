@@ -1,4 +1,4 @@
-package com.bread.timedeal;
+package com.bread.timedeal.constants;
 
 import java.time.LocalDateTime;
 

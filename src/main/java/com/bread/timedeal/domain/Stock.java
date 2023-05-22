@@ -27,9 +27,7 @@ public final class Stock {
     public Stock minus(Stock stock) {
         int count = validate(stock);
 
-        synchronized (this) {
-            this.stock = this.stock - count;
-        }
+        this.stock = this.stock - count;
 
         return this;
     }

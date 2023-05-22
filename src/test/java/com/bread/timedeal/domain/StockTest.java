@@ -1,5 +1,8 @@
 package com.bread.timedeal.domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +16,7 @@ class StockTest {
     Stock stock2 = new Stock(5);
     Stock result = stock1.plus(stock2);
 
-    Assertions.assertEquals(15, result.count());
+    assertEquals(15, result.count());
   }
 
   @Test
@@ -22,7 +25,7 @@ class StockTest {
     Stock stock2 = new Stock(5);
     Stock result = stock1.minus(stock2);
 
-    Assertions.assertEquals(5, result.count());
+    assertEquals(5, result.count());
   }
 
   @Test
@@ -30,7 +33,7 @@ class StockTest {
     Stock stock1 = new Stock(10);
     Stock stock2 = new Stock(-1);
 
-    Assertions.assertThrows(IllegalArgumentException.class,
+    assertThrows(IllegalArgumentException.class,
         () -> stock1.minus(stock2));
   }
 }
