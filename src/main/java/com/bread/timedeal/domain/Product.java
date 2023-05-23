@@ -44,6 +44,10 @@ public class Product {
       throw new RuntimeException("할인 기간이 종료 된 상품 입니다.");
     }
 
+    if (this.count() < 1) {
+      throw new RuntimeException("재고가 부족 합니다.");
+    }
+
     this.stock.minus(stock);
 
     return this;

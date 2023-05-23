@@ -4,7 +4,6 @@ import static com.bread.timedeal.constants.Constants.NOW;
 import static com.bread.timedeal.constants.Constants.TEST_PRODUCT_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.bread.timedeal.constants.Constants;
 import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.TimeSale;
