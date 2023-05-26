@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.TimeSale;
+import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.repository.ProductRepository;
 import com.bread.timedeal.service.ProductService;
 import java.util.concurrent.CountDownLatch;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -31,8 +33,9 @@ class ProductServiceIntegrationTest {
   void 재고_감소_동시성() throws InterruptedException {
     int threadCount = 100;
 
-    Product saveProduct = productRepository.saveAndFlush(
-        new Product(new Stock(threadCount), new TimeSale(NOW), TEST_PRODUCT_NAME));
+    Product saveProduct = productService.create(
+        new ProductCreateRequest(threadCount, new TimeSale(NOW).getSaleEndTime(),
+            TEST_PRODUCT_NAME));
 
     ExecutorService executorService = Executors.newFixedThreadPool(32);
     CountDownLatch latch = new CountDownLatch(threadCount);
@@ -41,7 +44,10 @@ class ProductServiceIntegrationTest {
       executorService.submit(() -> {
         try {
           productService.decreaseStock(saveProduct.getId(), 1);
-        } finally {
+        } catch (Exception e) {
+          System.out.println(e);
+        }
+        finally {
           latch.countDown();
         }
       });
@@ -51,6 +57,6 @@ class ProductServiceIntegrationTest {
 
     Product product = productRepository.findById(saveProduct.getId()).orElseThrow();
 
-    assertThat(product.count()).isEqualTo(0);
+    assertThat(product.count()).isZero();
   }
 }
