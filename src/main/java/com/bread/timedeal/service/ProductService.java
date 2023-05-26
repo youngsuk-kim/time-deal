@@ -3,6 +3,7 @@ package com.bread.timedeal.service;
 import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.dto.ProductCreateRequest;
+import com.bread.timedeal.dto.ProductCreateResponse;
 import com.bread.timedeal.repository.ProductRepository;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class ProductService {
   }
 
   @Transactional
-  public Product create(ProductCreateRequest request) {
-    return productRepository.save(request.toEntity(request));
+  public ProductCreateResponse create(ProductCreateRequest request) {
+    return ProductCreateResponse.of(productRepository.save(request.toEntity(request)));
   }
 
   @Transactional

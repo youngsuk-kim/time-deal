@@ -22,7 +22,7 @@ public class ProductController {
    */
   @PostMapping("/products")
   public ProductCreateResponse create(@RequestBody ProductCreateRequest request) {
-    return ProductCreateResponse.of(productService.create(request));
+    return productService.create(request);
   }
 
   /**

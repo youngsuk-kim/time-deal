@@ -8,6 +8,13 @@ import java.time.LocalDateTime;
 @Table(name = "products")
 public class Product {
 
+  public Product(Long id, String name, Stock stock, TimeSale timeSale) {
+    this.id = id;
+    this.name = name;
+    this.stock = stock;
+    this.timeSale = timeSale;
+  }
+
   public Product(Stock stock, TimeSale timeSale, String name) {
     this.stock = stock;
     this.timeSale = timeSale;

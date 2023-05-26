@@ -8,6 +8,7 @@ import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.TimeSale;
 import com.bread.timedeal.dto.ProductCreateRequest;
+import com.bread.timedeal.dto.ProductCreateResponse;
 import com.bread.timedeal.repository.ProductRepository;
 import com.bread.timedeal.service.ProductService;
 import java.util.concurrent.CountDownLatch;
@@ -33,7 +34,7 @@ class ProductServiceIntegrationTest {
   void 재고_감소_동시성() throws InterruptedException {
     int threadCount = 100;
 
-    Product saveProduct = productService.create(
+    ProductCreateResponse saveProduct = productService.create(
         new ProductCreateRequest(threadCount, new TimeSale(NOW).getSaleEndTime(),
             TEST_PRODUCT_NAME));
 
@@ -43,7 +44,7 @@ class ProductServiceIntegrationTest {
     for (int i = 0; i < threadCount; i++) {
       executorService.submit(() -> {
         try {
-          productService.decreaseStock(saveProduct.getId(), 1);
+          productService.decreaseStock(saveProduct.id(), 1);
         } catch (Exception e) {
           System.out.println(e);
         }
@@ -55,7 +56,7 @@ class ProductServiceIntegrationTest {
 
     latch.await();
 
-    Product product = productRepository.findById(saveProduct.getId()).orElseThrow();
+    Product product = productRepository.findById(saveProduct.id()).orElseThrow();
 
     assertThat(product.count()).isZero();
   }

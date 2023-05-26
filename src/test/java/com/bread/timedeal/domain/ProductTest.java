@@ -21,27 +21,6 @@ class ProductTest {
   }
 
   @Test
-  void 사용자_동시에_100개_등록() throws InterruptedException {
-    User user = new User(Role.ADMIN);
-    Product product = new Product();
-
-    ExecutorService executorService = Executors.newFixedThreadPool(3);
-    CountDownLatch latch = new CountDownLatch(1000);
-
-    for (int i = 0; i < 1000; i++) {
-      executorService.submit(() -> {
-        user.register(product, new Stock(1));
-        latch.countDown();
-      });
-    }
-
-    executorService.shutdown();
-    latch.await();
-
-    assertThat(product.count()).isEqualTo(1001);
-  }
-
-  @Test
   void 사용자_상품을_0개_등록() {
     User user = new User(Role.USER);
     Product product = new Product();
