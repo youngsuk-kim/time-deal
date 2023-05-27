@@ -31,8 +31,7 @@ public class UserService {
     final User foundUser = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
 
-    final Product foundProduct = productRepository.findById(productId)
-        .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다"));
+    final Product foundProduct = productRepository.findByIdPessimisticLock(productId);
 
     foundUser.buy(foundProduct, new Stock(quantity));
   }

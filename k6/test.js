@@ -10,7 +10,7 @@ export let options = {
 
 export default function () {
 
-  const url = new URL('http://localhost:8080/users/buy/2');
+  const url = new URL('http://localhost:8080/users/buy/1');
 
   url.searchParams.append('quantity', 1);
   url.searchParams.append('userId', 1);
