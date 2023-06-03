@@ -7,6 +7,7 @@ import com.bread.timedeal.domain.User;
 import com.bread.timedeal.repository.ProductRepository;
 import com.bread.timedeal.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -26,7 +27,7 @@ public class UserService {
     userRepository.save(new User(role));
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
   public void buy(Long productId, int quantity, Long userId) {
     final User foundUser = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));

@@ -12,3 +12,8 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+
+  data:
+    redis:
+      port: 6379
+      host: localhost

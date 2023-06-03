@@ -32,7 +32,7 @@ class ProductServiceIntegrationTest {
 
   @Test
   void 재고_감소_동시성() throws InterruptedException {
-    int threadCount = 100;
+    int threadCount = 1000;
 
     ProductCreateResponse saveProduct = productService.create(
         new ProductCreateRequest(threadCount, new TimeSale(NOW).getSaleEndTime(),

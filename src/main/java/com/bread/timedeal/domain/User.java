@@ -19,7 +19,15 @@ public class User {
     this.userRole = userRole;
   }
 
-  public User() {
+  public User() {}
+
+  public Order order(Product product, int count) {
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return Order.make(product, count, this);
   }
 
   public Product register(Product product, Stock stock) {
@@ -34,5 +42,9 @@ public class User {
 
   protected LocalDateTime now() {
     return LocalDateTime.now();
+  }
+
+  public Long getId() {
+    return id;
   }
 }
