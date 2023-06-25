@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -42,7 +41,6 @@ public class Order {
   private OrderStatus orderStatus;
 
   public static Order make(Product product, int stock, User user) {
-    product.decrease(new Stock(stock), LocalDateTime.now());
     return new Order(user, product, stock);
   }
 }

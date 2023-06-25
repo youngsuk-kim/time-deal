@@ -1,9 +1,9 @@
 package com.bread.timedeal.dto;
 
-public class OrderRequest {
+public record OrderRequest (
 
-  public Long userId;
-  public Long productId;
+  Long userId,
+  Long productId,
 
-  public int count;
-}
+  int count
+) {}

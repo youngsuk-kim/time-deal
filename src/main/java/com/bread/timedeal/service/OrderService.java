@@ -1,21 +1,16 @@
 package com.bread.timedeal.service;
 
 
-import static com.bread.timedeal.Constants.FIRST_ELEMENT;
-import static com.bread.timedeal.Constants.LAST_ELEMENT;
-import static com.bread.timedeal.Constants.LAST_INDEX;
-import static com.bread.timedeal.Constants.PUBLISH_SIZE;
-import static com.bread.timedeal.Constants.TIME_SALE_ORDER_COUNT;
-import static com.bread.timedeal.Constants.TIME_SALE_PRODUCT_NAME;
-
+import com.bread.timedeal.domain.Order;
 import com.bread.timedeal.domain.Product;
+import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.domain.User;
 import com.bread.timedeal.dto.OrderRequest;
+import com.bread.timedeal.repository.OrderRepository;
 import com.bread.timedeal.repository.ProductRepository;
 import com.bread.timedeal.repository.UserRepository;
-import java.util.Set;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,65 +20,38 @@ public class OrderService {
 
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
-  private final RedisTemplate<String, Object> redisTemplate;
+  private final OrderRepository orderRepository;
 
-  public OrderService(
-      ProductRepository productRepository,
-      UserRepository userRepository,
-      RedisTemplate<String, Object> redisTemplate) {
+  public OrderService(ProductRepository productRepository, UserRepository userRepository,
+      OrderRepository orderRepository) {
     this.productRepository = productRepository;
     this.userRepository = userRepository;
-    this.redisTemplate = redisTemplate;
+    this.orderRepository = orderRepository;
   }
 
   @Transactional
-  public void addQueue(OrderRequest orderRequest) {
-    final long now = System.currentTimeMillis();
+  public void order(OrderRequest orderRequest) {
+    log.info("주문 데이터 {}", orderRequest.toString());
 
-    User user = userRepository.findById(orderRequest.userId)
+    User user = userRepository.findById(orderRequest.userId())
         .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
 
-    redisTemplate.opsForZSet().add(TIME_SALE_PRODUCT_NAME, user.getId(), (int) now);
+    Product product = productRepository.findById(orderRequest.productId())
+        .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다"));
 
-    log.info("대기열에 추가 - {} ({}초)", orderRequest.userId, now);
-  }
+    orderRepository.save(Order.make(product, orderRequest.count(), user));
 
-  @Transactional(readOnly = true)
-  public void getOrder() {
-    final long start = FIRST_ELEMENT;
-    final long end = LAST_ELEMENT;
-
-    Set<Object> userIdQueue = redisTemplate.opsForZSet().range(TIME_SALE_PRODUCT_NAME, start, end);
-
-    for (Object userId : userIdQueue) {
-      Long rank = redisTemplate.opsForZSet().rank(TIME_SALE_PRODUCT_NAME, userId);
-      log.info("'{}'님의 현재 대기열은 {}명 남았습니다.", userId, rank);
-    }
+    log.info("주문 완료 유저 아이디 {}, 제품명 {}", user.getId(), product.getName());
   }
 
   @Transactional
-  public void publish() {
+  public void decrease(Long id, int stock) {
+    Product product = productRepository.findWithOptimisticLockById(id)
+        .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다"));
 
-    final long start = FIRST_ELEMENT;
-    final long end = PUBLISH_SIZE - LAST_INDEX;
-
-    Set<Object> userIdQueue = redisTemplate.opsForZSet().range("나이키", start, end);
-
-    if (userIdQueue.isEmpty()) {
-      log.info("주문한 고객이 없습니다");
-    }
-
-    for (Object userId : userIdQueue) {
-      Product product = productRepository.findById(3L)
-          .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다"));
-
-      User user = userRepository.findById((Long) userId)
-          .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
-
-      user.order(product, TIME_SALE_ORDER_COUNT);
-      log.info("'{}'님의 {} 선착순 주문이 완료 되었습니다.", user.getId(), TIME_SALE_PRODUCT_NAME);
-      redisTemplate.opsForZSet().remove(TIME_SALE_PRODUCT_NAME, userId);
-    }
+        product.decrease(new Stock(stock), LocalDateTime.now());
+        productRepository.saveAndFlush(product);
   }
+
 
 }

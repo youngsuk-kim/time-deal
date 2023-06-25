@@ -22,11 +22,6 @@ public class User {
   public User() {}
 
   public Order order(Product product, int count) {
-    try {
-      Thread.sleep(3000);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
     return Order.make(product, count, this);
   }
 

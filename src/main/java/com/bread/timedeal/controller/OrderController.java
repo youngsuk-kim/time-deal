@@ -15,8 +15,13 @@ public class OrderController {
     this.orderService = orderService;
   }
 
+  /**
+   * 주문하기
+   *
+   * @param orderRequest
+   */
   @PostMapping("/orders")
-  public void order(@RequestBody OrderRequest orderRequest) {
-    orderService.addQueue(orderRequest);
+  public void order(@RequestBody OrderRequest orderRequest) throws InterruptedException {
+    orderService.order(orderRequest);
   }
 }

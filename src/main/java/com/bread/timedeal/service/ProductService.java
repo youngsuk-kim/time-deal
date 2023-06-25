@@ -4,8 +4,11 @@ import com.bread.timedeal.domain.Product;
 import com.bread.timedeal.domain.Stock;
 import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.dto.ProductCreateResponse;
+import com.bread.timedeal.dto.ProductUpdateRequest;
 import com.bread.timedeal.repository.ProductRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,4 +39,24 @@ public class ProductService {
     foundProduct.decrease(new Stock(stock), LocalDateTime.now());
   }
 
+  @Transactional
+  public void update(ProductUpdateRequest request, Long productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new RuntimeException("상품이 없습니다"));
+
+    product.update(request);
+  }
+
+  @Transactional
+  public void delete(Long productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new RuntimeException("상품이 없습니다"));
+
+    product.delete();
+  }
+
+  @Transactional(readOnly = true)
+  public List<Product> list(Pageable pageable) {
+    return productRepository.findAll(pageable).toList();
+  }
 }

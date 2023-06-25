@@ -1,15 +1,17 @@
-package com.bread.timedeal;
+package com.bread.timedeal.service;
 
 import static com.bread.timedeal.constants.Constants.NOW;
 import static com.bread.timedeal.constants.Constants.TEST_PRODUCT_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.bread.timedeal.domain.Product;
+import com.bread.timedeal.domain.Role;
 import com.bread.timedeal.domain.TimeSale;
+import com.bread.timedeal.dto.OrderRequest;
 import com.bread.timedeal.dto.ProductCreateRequest;
 import com.bread.timedeal.dto.ProductCreateResponse;
+import com.bread.timedeal.facade.OrderFacade;
 import com.bread.timedeal.repository.ProductRepository;
-import com.bread.timedeal.service.ProductService;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ProductServiceIntegrationTest {
+class OrderServiceTest {
+
+  private static final int THREAD_COUNT = 100;
 
   @Autowired
   private ProductRepository productRepository;
@@ -28,21 +32,28 @@ class ProductServiceIntegrationTest {
   @Autowired
   private ProductService productService;
 
+  @Autowired
+  private OrderFacade orderFacade;
+
+  @Autowired
+  private UserService userService;
+
   @Test
   void 재고_감소_동시성() throws InterruptedException {
-    int threadCount = 1000;
 
     ProductCreateResponse saveProduct = productService.create(
-        new ProductCreateRequest(threadCount, new TimeSale(NOW).getSaleEndTime(),
+        new ProductCreateRequest(THREAD_COUNT, new TimeSale(NOW).getSaleEndTime(),
             TEST_PRODUCT_NAME));
 
-    ExecutorService executorService = Executors.newFixedThreadPool(32);
-    CountDownLatch latch = new CountDownLatch(threadCount);
+    userService.create(Role.ADMIN);
 
-    for (int i = 0; i < threadCount; i++) {
+    ExecutorService executorService = Executors.newFixedThreadPool(32);
+    CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+
+    for (int i = 0; i < THREAD_COUNT; i++) {
       executorService.submit(() -> {
         try {
-          productService.decreaseStock(saveProduct.id(), 1);
+          orderFacade.execute(new OrderRequest(1L, 1L, 1));
         } catch (Exception e) {
           System.out.println(e);
         }

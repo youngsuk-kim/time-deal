@@ -13,7 +13,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-  data:
-    redis:
-      port: 6379
-      host: localhost
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace

@@ -13,4 +13,8 @@ spring:
         show_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace

@@ -1,5 +1,6 @@
 package com.bread.timedeal.domain;
 
+import com.bread.timedeal.dto.ProductUpdateRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,14 @@ public class Product {
   private Stock stock = new Stock(1);
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinColumn(foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
   private TimeSale timeSale;
+
+  @Version
+  private Long version;
+
+  @Column
+  private Boolean isDeleted = false;
 
   public Product add(Stock stock) {
     this.stock.plus(stock);
@@ -64,6 +72,26 @@ public class Product {
     return timeSale.getSaleEndTime();
   }
 
+  public void delete() {
+    this.isDeleted = true;
+  }
+
+  public Product update(ProductUpdateRequest request) {
+    if (request.name() != null) {
+      this.name = request.name();
+    }
+
+    if (request.time() != null) {
+      this.timeSale = new TimeSale(request.time());
+    }
+
+    if (request.stock() != null) {
+      this.stock = new Stock(request.stock());
+    }
+
+    return this;
+  }
+
   public String getName() {
     return this.name;
   }
@@ -71,4 +99,5 @@ public class Product {
   public Long getId() {
     return this.id;
   }
+
 }
